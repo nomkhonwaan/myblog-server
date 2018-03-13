@@ -1,0 +1,79 @@
+# A post entity
+type Post implements Node {
+  # A post's ID
+  id: ID!
+
+  # A post's title
+  title: String!
+
+  # A post's slug
+  slug: String!
+
+  # An absolute link to the post
+  link: String!
+
+  # A post's status
+  status: PostStatus!
+
+  # A post's content in HTML format
+  html: String
+
+  # A post's content in Markdown format
+  markdown: String
+
+  # # A post's author
+  # author: User!
+
+  # # A post's tags
+  # tags: [Tag!]
+
+  # # A post's categories
+  # categories: [Category!]!
+
+  # An RFC3339 date format that the post was created
+  createdAt: String!
+
+  # An RFC3339 date format that the post was updated
+  updatedAt: String
+
+  # An RFC3339 date format that the post was published
+  publishedAt: String
+}
+
+# A connection to a list of items
+type PostConnection {
+  # Information to aid in pagination
+  pageInfo: PageInfo!
+
+  # A list of edges
+  edges: [PostEdge]
+}
+
+# An edge in a connection
+type PostEdge {
+  # The item at the end of the edge
+  node: Post
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+# Ordering options for querying a list of posts
+input PostOrder {
+  direction: OrderDirection
+  field: PostOrderField
+}
+
+# Possible statuses in which to filter a list of posts when provided a `status` argument
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+# Possible fields in which to filter a list of posts when provided an `orderBy` argument 
+enum PostOrderField {
+  SLUG
+  CREATED_AT
+  UPDATED_AT
+  PUBLISHED_AT
+}

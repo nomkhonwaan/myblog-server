@@ -1,0 +1,15 @@
+# The query root of myblog's GraphQL interface
+type Query {
+  # # Fetches an object given its ID
+  # node(id: ID!): Node
+  # Return a published post from its ID
+  publishedPost(id: ID!): Post
+  # # Return a list of published posts
+  # publishedPosts(after: String, first: Int, before: String, last: Int, orderBy: PostOrder): PostConnection
+}
+
+# Possible directions in which to order a list of items when provided and `orderBy` argument
+enum OrderDirection {
+  ASC
+  DESC
+}
