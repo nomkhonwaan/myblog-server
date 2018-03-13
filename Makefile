@@ -39,7 +39,7 @@ generate-mock:
 	then \
 		$(DEP) ensure -add github.com/golang/mock/mockgen; \
 	fi
-	$(MOCKGEN) -source=pkg/post/repository.go -package post_test Repositorier > pkg/post/repository_mock.go
+	$(MOCKGEN) -source=pkg/post/repository.go -package post Repositorier > pkg/post/repository_mock.go
 
 .PHONY: test
 test: generate-bindata generate-mock

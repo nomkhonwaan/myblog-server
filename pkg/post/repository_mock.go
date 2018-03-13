@@ -2,11 +2,12 @@
 // Source: pkg/post/repository.go
 
 // Package post_test is a generated GoMock package.
-package post_test
+package post
 
 import (
-	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
+
+	gomock "github.com/golang/mock/gomock"
 )
 
 // MockRepositorier is a mock of Repositorier interface

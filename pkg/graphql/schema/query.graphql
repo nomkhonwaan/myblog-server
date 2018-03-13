@@ -5,7 +5,7 @@ type Query {
   # Return a published post from its ID
   publishedPost(id: ID!): Post
   # # Return a list of published posts
-  # publishedPosts(after: String, first: Int, before: String, last: Int, orderBy: PostOrder): PostConnection
+  # publishedPosts(limit: Int, offset: Int, orderBy: PostOrder): PostConnection
 }
 
 # Possible directions in which to order a list of items when provided and `orderBy` argument

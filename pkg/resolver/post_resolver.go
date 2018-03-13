@@ -1,7 +1,6 @@
 package resolver
 
 import (
-	"context"
 	"time"
 
 	"github.com/graph-gophers/graphql-go"
@@ -9,74 +8,52 @@ import (
 	"github.com/nomkhonwaan/myblog-server/pkg/post"
 )
 
-type PostResolver struct {
-	*post.Post
+type postResolver struct {
+	p *post.Post
 }
 
-func NewPostResolver(p *post.Post) *PostResolver {
-	return &PostResolver{Post: p}
+func newPostResolver(p *post.Post) *postResolver {
+	return &postResolver{p: p}
 }
 
-func (r *PostResolver) ID() graphql.ID {
-	return relay.MarshalID("post", r.Post.ID.Hex())
+func (r *postResolver) ID() graphql.ID {
+	return relay.MarshalID("post", r.p.ID.Hex())
 }
 
-func (r *PostResolver) Title() string {
-	return r.Post.Title
+func (r *postResolver) Title() string {
+	return r.p.Title
 }
 
-func (r *PostResolver) Slug() string {
-	return r.Post.Slug
+func (r *postResolver) Slug() string {
+	return r.p.Slug
 }
 
-func (r *PostResolver) Link() string {
-	return r.Post.PublishedAt.Format("/2006/01/02/") + r.Post.Slug + "-" + r.Post.ID.Hex()
+func (r *postResolver) Link() string {
+	return r.p.PublishedAt.Format("/2006/01/02/") + r.p.Slug + "-" + r.p.ID.Hex()
 }
 
-func (r *PostResolver) Status() string {
-	return string(r.Post.Status)
+func (r *postResolver) Status() string {
+	return string(r.p.Status)
 }
 
-func (r *PostResolver) HTML() *string {
-	return &r.Post.HTML
+func (r *postResolver) HTML() *string {
+	return &r.p.HTML
 }
 
-func (r *PostResolver) Markdown() *string {
-	return &r.Post.Markdown
+func (r *postResolver) Markdown() *string {
+	return &r.p.Markdown
 }
 
-func (r *PostResolver) CreatedAt() string {
-	return r.Post.CreatedAt.Format(time.RFC3339)
+func (r *postResolver) CreatedAt() string {
+	return r.p.CreatedAt.Format(time.RFC3339)
 }
 
-func (r *PostResolver) UpdatedAt() *string {
-	updatedAt := r.Post.UpdatedAt.Format(time.RFC3339)
+func (r *postResolver) UpdatedAt() *string {
+	updatedAt := r.p.UpdatedAt.Format(time.RFC3339)
 	return &updatedAt
 }
 
-func (r *PostResolver) PublishedAt() *string {
-	publisedAt := r.Post.PublishedAt.Format(time.RFC3339)
+func (r *postResolver) PublishedAt() *string {
+	publisedAt := r.p.PublishedAt.Format(time.RFC3339)
 	return &publisedAt
-}
-
-func (r *Resolver) PublishedPost(ctx context.Context, args struct{ ID graphql.ID }) (*PostResolver, error) {
-	repo := (ctx.Value("repositories").(map[string]interface{})["post"]).(*post.Repository)
-
-	var id string
-
-	err := relay.UnmarshalSpec(args.ID, &id)
-	if err != nil {
-		return nil, err
-	}
-
-	p, err := repo.FindByID(id)
-	if err != nil {
-		return nil, err
-	}
-
-	if p.Status != post.Published && p.PublishedAt.IsZero() {
-		return nil, nil
-	}
-
-	return NewPostResolver(p), nil
 }
