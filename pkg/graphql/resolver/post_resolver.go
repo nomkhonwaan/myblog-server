@@ -50,10 +50,12 @@ func (r *postResolver) CreatedAt() string {
 
 func (r *postResolver) UpdatedAt() *string {
 	updatedAt := r.p.UpdatedAt.Format(time.RFC3339)
+
 	return &updatedAt
 }
 
 func (r *postResolver) PublishedAt() *string {
 	publisedAt := r.p.PublishedAt.Format(time.RFC3339)
+
 	return &publisedAt
 }

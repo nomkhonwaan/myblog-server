@@ -2,7 +2,6 @@ package post
 
 import (
 	"github.com/nicksrandall/dataloader"
-	"github.com/nomkhonwaan/myblog-server/pkg/dataloader/cache"
 	mgo "gopkg.in/mgo.v2"
 )
 
@@ -18,23 +17,23 @@ type Repositorier interface {
 }
 
 type Repository struct {
-	db                *mgo.Database
-	loader            *dataloader.Loader
-	collectionName    string
-	batchQueryResults []*Post
+	db     *mgo.Database
+	loader *dataloader.Loader
+	// collectionName    string
+	// batchQueryResults []*Post
 }
 
 func NewRepository(db *mgo.Database) (*Repository, error) {
-	c, err := cache.New(100)
-	if err != nil {
-		return nil, err
-	}
+	// c, err := cache.New(100)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	repo := Repository{db: db, collectionName: "posts"}
-	repo.loader = dataloader.NewBatchedLoader(
-		repo.batch,
-		dataloader.WithCache(c),
-	)
+	repo := Repository{db: db}
+	// repo.loader = dataloader.NewBatchedLoader(
+	// // repo.batch,
+	// // dataloader.WithCache(c),
+	// )
 
 	return &repo, nil
 }
