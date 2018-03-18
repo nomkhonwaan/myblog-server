@@ -1,0 +1,20 @@
+# The query root of myblog's GraphQL interface
+type Query {
+  # Return a published post from its ID
+  publishedPost(id: ID!): Post
+  
+  # Return a list of published posts
+  publishedPosts(limit: Int, offset: Int, orderBy: PostOrder): [Post]
+
+  # Return a tag from its ID
+  tag(id: ID!): Tag
+
+  # Return a list of tags
+  tags(limit: Int, offset: Int, orderBy: TagOrderBy): [Tag]
+}
+
+# Possible directions in which to order a list of items when provided and `orderBy` argument
+enum OrderDirection {
+  ASC
+  DESC
+}

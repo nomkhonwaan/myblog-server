@@ -1,0 +1,32 @@
+# A Post entity
+type Post {
+  # A Post's ID
+  id: ID!
+  
+  # A Post's title
+  title: String!
+
+  # A Post's slug
+  slug: String!
+
+  # A link to this Post
+  link: String
+
+  # A Post's status
+  status: String!
+
+  # A Post's content in HTML format
+  html: String
+
+  # A Post's content in Markdown format
+  markdown: String
+
+  # An RFC3339 date format that the Post was created
+  createdAt: String!
+
+  # An RFC3339 date format that the Post was updated
+  updatedAt: String
+
+  # An RFC3339 date format that the Post was published
+  publishedAt: String
+}

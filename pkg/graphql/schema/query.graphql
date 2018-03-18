@@ -1,0 +1,5 @@
+# The query root of MyBlog's GraphQL interface
+type Query {
+  # Return a published Post from its ID
+  publishedPost(id: ID!): Post
+}
