@@ -38,13 +38,17 @@ func main() {
 		return
 	}
 
+	// Setup Logrus with given logging-level (or "info" if parse error) and force display log full timestamp
 	setLogrusLevelAndOutputTextFormat(*loggingLevel)
 
+	// Make a new connection to MongoDB server
 	session, err := makeANewConnectionToMongoDB(*mongodbConnectionURI)
 	handleErrors(err)
 
+	// Initial all handlers
 	graphqlHandler := graphql.Handler{}
 
+	// Setup the dependency injection using facebookgo/inject
 	var g inject.Graph
 	handleErrors(
 		g.Provide(
@@ -55,11 +59,13 @@ func main() {
 		g.Populate(),
 	)
 
+	// Create a new API server
 	server, err := app.NewInsecureAPIServer(
 		graphqlHandler,
 	)
 	handleErrors(err)
 
+	// Start the API server in background and wait for the stop signal
 	stopCh := handleSignals()
 	handleErrors(server.ListenAndServe(*listenAddress, stopCh))
 
