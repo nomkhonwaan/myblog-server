@@ -2,12 +2,33 @@
 
 
 [[projects]]
-  name = "github.com/golang/mock"
-  packages = [
-    "mockgen",
-    "mockgen/model"
-  ]
-  revision = "13f360950a79f5864a972c786a10a50e44b69541"
+  branch = "master"
+  name = "github.com/auth0-community/auth0"
+  packages = ["."]
+  revision = "3af3068a500bf038ca7ebde923ffbe813da61cfd"
+
+[[projects]]
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/facebookgo/inject"
+  packages = ["."]
+  revision = "cc1aa653e50f6a9893bcaef89e673e5b24e1e97b"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/facebookgo/structtag"
+  packages = ["."]
+  revision = "217e25fb96916cc60332e399c9aa63f5c422ceed"
+
+[[projects]]
+  name = "github.com/go-errors/errors"
+  packages = ["."]
+  revision = "3afebba5a48dbc89b574d890b6b34d9ee10b4785"
   version = "v1.0.0"
 
 [[projects]]
@@ -26,7 +47,6 @@
     "internal/validation",
     "introspection",
     "log",
-    "relay",
     "trace"
   ]
   revision = "1d4cd9276f7b54ae206249e948a154337cc081e3"
@@ -71,7 +91,11 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["ssh/terminal"]
+  packages = [
+    "ed25519",
+    "ed25519/internal/edwards25519",
+    "ssh/terminal"
+  ]
   revision = "85f98707c97e11569271e4d9b3d397e079c4f4d0"
 
 [[projects]]
@@ -101,9 +125,20 @@
   ]
   revision = "3f83fa5005286a7fe593b055f0d7771a7dce4655"
 
+[[projects]]
+  name = "gopkg.in/square/go-jose.v2"
+  packages = [
+    ".",
+    "cipher",
+    "json",
+    "jwt"
+  ]
+  revision = "6ee92191fea850cdcab9a18867abf5f521cdbadb"
+  version = "v2.1.4"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5a331b0d238e1106790ba3697613744001229174ed0a7abe3551db7d08a2dea2"
+  inputs-digest = "f0843ce34de65f872479fe9be537b9702ee29af6cd02c036aa63223e53ff2534"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -86,7 +86,7 @@ func pkgGraphqlSchemaQueryGraphql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "pkg/graphql/schema/query.graphql", size: 133, mode: os.FileMode(420), modTime: time.Unix(1521355578, 0)}
+	info := bindataFileInfo{name: "pkg/graphql/schema/query.graphql", size: 133, mode: os.FileMode(420), modTime: time.Unix(1521471296, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -106,7 +106,7 @@ func pkgGraphqlSchemaSchemaGraphql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "pkg/graphql/schema/schema.graphql", size: 26, mode: os.FileMode(420), modTime: time.Unix(1521355581, 0)}
+	info := bindataFileInfo{name: "pkg/graphql/schema/schema.graphql", size: 26, mode: os.FileMode(420), modTime: time.Unix(1520772598, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -126,7 +126,7 @@ func pkgGraphqlSchemaTypesPostGraphql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "pkg/graphql/schema/types/post.graphql", size: 548, mode: os.FileMode(420), modTime: time.Unix(1521370208, 0)}
+	info := bindataFileInfo{name: "pkg/graphql/schema/types/post.graphql", size: 548, mode: os.FileMode(420), modTime: time.Unix(1521471296, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -146,7 +146,7 @@ func pkgGraphqlGraphiqlIndexHtml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "pkg/graphql/graphiql/index.html", size: 1351, mode: os.FileMode(420), modTime: time.Unix(1521354639, 0)}
+	info := bindataFileInfo{name: "pkg/graphql/graphiql/index.html", size: 1351, mode: os.FileMode(420), modTime: time.Unix(1521471296, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
