@@ -10,6 +10,7 @@ import (
 
 	"github.com/facebookgo/inject"
 	"github.com/nomkhonwaan/myblog-server/cmd/myblog/app"
+	"github.com/nomkhonwaan/myblog-server/pkg/auth"
 	"github.com/nomkhonwaan/myblog-server/pkg/graphql"
 	"github.com/nomkhonwaan/myblog-server/pkg/graphql/resolver"
 	"github.com/nomkhonwaan/myblog-server/pkg/post"
@@ -24,6 +25,9 @@ const (
 var version, revision string
 
 var (
+	domain               = flag.String("auth0-domain", "", "an Auth0 domain")
+	audience             = flag.String("auth0-api-audience", "", "an Auth0 API audience")
+	clientSecret         = flag.String("auth0-api-client-secret", "", "an Auth0 API client secret")
 	loggingLevel         = flag.String("logging-level", logrus.InfoLevel.String(), "a minimum level of the log that will print out")
 	listenAddress        = flag.String("listen-address", "0.0.0.0:8080", "a listening address of the API server")
 	mongodbConnectionURI = flag.String("mongodb-connection-uri", "mongodb://localhost/nomkhonwaan_com", "a MongoDB connection URI")
@@ -45,7 +49,8 @@ func main() {
 	session, err := makeANewConnectionToMongoDB(*mongodbConnectionURI)
 	handleErrors(err)
 
-	// Initial all handlers
+	// Initialize all handlers
+	authHandler := auth.NewHandler(*domain, []string{*audience}, *clientSecret)
 	graphqlHandler := graphql.Handler{}
 
 	// Setup the dependency injection using facebookgo/inject
@@ -61,6 +66,7 @@ func main() {
 
 	// Create a new API server
 	server, err := app.NewInsecureAPIServer(
+		authHandler,
 		graphqlHandler,
 	)
 	handleErrors(err)
