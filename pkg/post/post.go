@@ -6,6 +6,7 @@ import (
 
 	dld "github.com/nicksrandall/dataloader"
 	"github.com/nomkhonwaan/myblog-server/pkg/dataloader"
+	"github.com/nomkhonwaan/myblog-server/pkg/tag"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -18,6 +19,7 @@ type Post struct {
 	Status      string        `bson:"status"`
 	HTML        string        `bson:"html"`
 	Markdown    string        `bson:"markdown"`
+	Tags        []tag.Tag     `bson:"tags"`
 	CreatedAt   time.Time     `bson:"createdAt"`
 	UpdatedAt   time.Time     `bson:"updatedAt"`
 	PublishedAt time.Time     `bson:"publishedAt"`
