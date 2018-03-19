@@ -11,7 +11,7 @@ import (
 	"github.com/nomkhonwaan/myblog-server/pkg/graphql/resolver"
 )
 
-// Handler is an HTTP handler of GraphQL provide the following these endpoints
+// Handler is an HTTP handler of GraphQL provides the following these endpoints
 // - GET /graphql - Returns a Graphiql HTML page
 // - POST /graphql - Serves a GraphQL endpoint
 // - GET /schema.graphql - Returns a GraphQL's schema file
