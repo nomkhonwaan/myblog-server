@@ -4,9 +4,10 @@ import (
 	"context"
 	"net/http"
 
+	"gopkg.in/square/go-jose.v2"
+
 	"github.com/auth0-community/auth0"
 	"github.com/sirupsen/logrus"
-	jose "gopkg.in/square/go-jose.v2"
 )
 
 const (
@@ -24,14 +25,14 @@ const (
 	EmailVerified
 )
 
-// Key used to define a context key instead of basic type
+// Key used to define a context.Context's key instead of basic type
 type Key int
 
-// NewMiddleware returns a new Auth middleware
-func NewMiddleware(domain string, audience []string, clientSecret string) func(http.Handler) http.Handler {
+// NewRS256JSONWebTokenMiddleware uses to validate a JSON web token that signing in RS256 format
+func NewRS256JSONWebTokenMiddleware(domain string, audience []string, secret interface{}) func(http.Handler) http.Handler {
 	validator := auth0.NewValidator(
 		auth0.NewConfiguration(
-			auth0.NewKeyProvider([]byte(clientSecret)),
+			auth0.NewKeyProvider(secret),
 			audience,
 			"https://"+domain+".auth0.com/",
 			jose.RS256,
