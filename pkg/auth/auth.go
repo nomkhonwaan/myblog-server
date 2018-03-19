@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"gopkg.in/square/go-jose.v2"
@@ -28,13 +29,17 @@ const (
 // Key used to define a context.Context's key instead of basic type
 type Key int
 
-// NewRS256JSONWebTokenMiddleware uses to validate a JSON web token that signing in RS256 format
-func NewRS256JSONWebTokenMiddleware(domain string, audience []string, secret interface{}) func(http.Handler) http.Handler {
+func NewMiddleware(domain string, audience []string) func(http.Handler) http.Handler {
 	validator := auth0.NewValidator(
 		auth0.NewConfiguration(
-			auth0.NewKeyProvider(secret),
+			auth0.NewJWKClient(
+				auth0.JWKClientOptions{
+					URI: fmt.Sprintf("https://%s.auth0.com/.well-known/jwks.json", domain),
+				},
+				nil,
+			),
 			audience,
-			"https://"+domain+".auth0.com/",
+			fmt.Sprintf("https://%s.auth0.com", domain),
 			jose.RS256,
 		),
 		nil,

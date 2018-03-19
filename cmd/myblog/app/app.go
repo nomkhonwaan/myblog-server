@@ -34,8 +34,7 @@ const (
 )
 
 var (
-	rsaPrivateKey, rsaPublicKey string
-	version, revision           string
+	version, revision string
 )
 
 func init() {
@@ -62,14 +61,9 @@ func New() *cli.App {
 			EnvVar: "AUTH0_DOMAIN",
 		},
 		cli.StringSliceFlag{
-			Name:   "auth0-api-audience",
-			Usage:  "a list of Auth0 audience",
-			EnvVar: "AUTH0_API_AUDIENCE",
-		},
-		cli.StringFlag{
-			Name:   "auth0-api-client-secret",
-			Usage:  "an Auth0 API client secret",
-			EnvVar: "AUTH0_API_CLIENT_SECRET",
+			Name:   "auth0-client-id",
+			Usage:  "an Auth0 client ID",
+			EnvVar: "AUTH0_CLIENT_ID",
 		},
 		cli.StringFlag{
 			Name:   "listen-address",
@@ -102,14 +96,9 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
-	publicKey, err := parseRSAPublicKeyFromBase64EncodedString(rsaPublicKey)
-	if err != nil {
-		return err
-	}
-	authMiddleware := auth.NewRS256JSONWebTokenMiddleware(
+	authMiddleware := auth.NewMiddleware(
 		ctx.String("auth0-domain"),
-		ctx.StringSlice("auth0-api-audience"),
-		publicKey,
+		[]string{ctx.String("auth0-client-id")},
 	)
 
 	graphqlHandler := graphql.Handler{}
