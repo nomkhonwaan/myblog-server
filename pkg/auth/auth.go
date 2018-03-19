@@ -47,10 +47,8 @@ func NewMiddleware(domain string, audience []string, clientSecret string) func(h
 			if err != nil {
 				logrus.Errorf("[%s] %s: %v", r.Method, r.URL.String(), err)
 			} else {
-				var (
-					name, email   string
-					emailVerified bool
-				)
+				var name, email string
+				var emailVerified bool
 
 				token.Claims("name", &name)
 				token.Claims("email", &email)
