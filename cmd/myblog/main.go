@@ -49,14 +49,15 @@ func main() {
 	session, err := makeANewConnectionToMongoDB(*mongodbConnectionURI)
 	handleErrors(err)
 
-	// Initialize all handlers
-	authHandler := auth.NewHandler(*domain, []string{*audience}, *clientSecret)
+	// Initialize all handlers and middlewares
+	authMiddleware := auth.NewMiddleware(*domain, []string{*audience}, *clientSecret)
 	graphqlHandler := graphql.Handler{}
 
 	// Setup the dependency injection using facebookgo/inject
 	var g inject.Graph
 	handleErrors(
 		g.Provide(
+
 			&inject.Object{Name: "pkg/graphql.Handler", Value: &graphqlHandler},
 			&inject.Object{Name: "pkg/graphql/resolver.Resolver", Value: &resolver.Resolver{}},
 			&inject.Object{Name: "pkg/post.Repositorier", Value: post.NewRepository(session.Clone().DB(defaultDatabaseName))},
@@ -65,11 +66,11 @@ func main() {
 	)
 
 	// Create a new API server
-	server, err := app.NewInsecureAPIServer(
-		authHandler,
-		graphqlHandler,
-	)
+	server, err := app.NewInsecureAPIServer()
 	handleErrors(err)
+
+	// Setup the API server routes
+	server.Handle("/graphql", authMiddleware(graphqlHandler))
 
 	// Start the API server in background and wait for the stop signal
 	stopCh := handleSignals()

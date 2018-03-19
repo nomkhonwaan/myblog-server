@@ -11,30 +11,30 @@ import (
 
 // APIServer is a wrapper of `http.Server`
 type APIServer struct {
-	*http.Server
+	*http.ServeMux
 	ShutdownTimeout time.Duration
 }
 
 // NewInsecureAPIServer returns a new APIServer without SSL & TLS configure
-func NewInsecureAPIServer(handlers ...Handler) (*APIServer, error) {
-	mux := http.NewServeMux()
-
-	for _, h := range handlers {
-		if err := h.Init(mux); err != nil {
-			return nil, err
-		}
-	}
-
+func NewInsecureAPIServer() (*APIServer, error) {
 	return &APIServer{
-		Server: &http.Server{
-			Handler: mux,
-		},
+		ServeMux:        http.NewServeMux(),
 		ShutdownTimeout: time.Second * 10,
 	}, nil
 }
 
+// Handle registers the handler for the given pattern.
+// If a handler already exists for pattern, Handle panics.
+func (s *APIServer) Handle(pattern string, handler http.Handler) {
+	s.ServeMux.Handle(pattern, handler)
+}
+
 // ListenAndServe listens and serves on given address
 func (s *APIServer) ListenAndServe(addr string, stopCh <-chan struct{}) error {
+	server := http.Server{
+		Handler: s.ServeMux,
+	}
+
 	l, err := net.Listen("tcp", addr)
 	if err != nil {
 		return err
@@ -47,7 +47,7 @@ func (s *APIServer) ListenAndServe(addr string, stopCh <-chan struct{}) error {
 		ctx, cancel := context.WithTimeout(context.Background(), s.ShutdownTimeout)
 		defer cancel()
 
-		s.Server.Shutdown(ctx)
+		server.Shutdown(ctx)
 	}()
 
 	go func() {
@@ -57,7 +57,7 @@ func (s *APIServer) ListenAndServe(addr string, stopCh <-chan struct{}) error {
 			}
 		}()
 
-		err := s.Server.Serve(l)
+		err := server.Serve(l)
 
 		select {
 		case <-stopCh:
