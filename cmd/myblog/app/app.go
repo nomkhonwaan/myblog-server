@@ -23,6 +23,14 @@ import (
 
 const (
 	defaultDatabaseName = "nomkhonwaan_com"
+	usage               = `
+        __  ___      ____  __           
+       /  |/  /_  __/ __ )/ /___  ____ _
+      / /|_/ / / / / __  / / __ \/ __ ` + "`" + `/
+     / /  / / /_/ / /_/ / / /_/ / /_/ / 
+    /_/  /_/\__, /_____/_/\____/\__, /  
+           /____/              /____/
+`
 )
 
 var (
@@ -39,7 +47,7 @@ func init() {
 // New returns a new application
 func New() *cli.App {
 	app := cli.NewApp()
-	app.Usage = "an API server for MyBlog application"
+	app.Usage = usage
 	app.Version = version
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
