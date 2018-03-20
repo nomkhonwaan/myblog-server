@@ -9,32 +9,18 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// APIServer is a wrapper of `http.Server`
-type APIServer struct {
-	*http.Server
+// InsecureServer provides an HTTP server without SSL, TLS configure
+type InsecureServer struct {
+	*http.ServeMux
 	ShutdownTimeout time.Duration
 }
 
-// NewInsecureAPIServer returns a new APIServer without SSL & TLS configure
-func NewInsecureAPIServer(handlers ...Handler) (*APIServer, error) {
-	mux := http.NewServeMux()
-
-	for _, h := range handlers {
-		if err := h.Init(mux); err != nil {
-			return nil, err
-		}
+// ListenAndServe listens and serves an HTTP server in the background on given address
+func (s *InsecureServer) ListenAndServe(addr string, stopCh <-chan struct{}) error {
+	server := http.Server{
+		Handler: s.ServeMux,
 	}
 
-	return &APIServer{
-		Server: &http.Server{
-			Handler: mux,
-		},
-		ShutdownTimeout: time.Second * 10,
-	}, nil
-}
-
-// ListenAndServe listens and serves on given address
-func (s *APIServer) ListenAndServe(addr string, stopCh <-chan struct{}) error {
 	l, err := net.Listen("tcp", addr)
 	if err != nil {
 		return err
@@ -47,7 +33,7 @@ func (s *APIServer) ListenAndServe(addr string, stopCh <-chan struct{}) error {
 		ctx, cancel := context.WithTimeout(context.Background(), s.ShutdownTimeout)
 		defer cancel()
 
-		s.Server.Shutdown(ctx)
+		server.Shutdown(ctx)
 	}()
 
 	go func() {
@@ -57,7 +43,7 @@ func (s *APIServer) ListenAndServe(addr string, stopCh <-chan struct{}) error {
 			}
 		}()
 
-		err := s.Server.Serve(l)
+		err := server.Serve(l)
 
 		select {
 		case <-stopCh:

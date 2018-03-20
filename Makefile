@@ -39,7 +39,7 @@ ifeq ($(MOCKGEN),)
 	$(GO) get -v -u github.com/golang/mock/mockgen
 	$(eval MOCKGEN := $(shell which mockgen))
 endif
-	# $(MOCKGEN) -source=pkg/post/repository.go -package post Repositorier > pkg/post/repository_mock.go
+	$(MOCKGEN) -source=pkg/post/repository.go -package post Repositorier > pkg/post/repository_mock.go
 
 .PHONY: test
 test: generate-bindata generate-mock
