@@ -57,7 +57,6 @@ func NewMiddleware(jwksURI string, audience []string, issuer string) func(http.H
 				ctx = context.WithValue(ctx, Name, claims["name"])
 				ctx = context.WithValue(ctx, Email, claims["email"])
 				ctx = context.WithValue(ctx, EmailVerified, claims["email_verified"])
-				logrus.Info(claims)
 			}
 
 			next.ServeHTTP(w, r.WithContext(ctx))
