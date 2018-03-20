@@ -56,14 +56,19 @@ func New() *cli.App {
 			Value:  logrus.InfoLevel.String(),
 		},
 		cli.StringFlag{
-			Name:   "auth0-domain",
-			Usage:  "an Auth0 domain name",
-			EnvVar: "AUTH0_DOMAIN",
+			Name:   "auth0-jwks-uri",
+			Usage:  "an Auth0 JWKS URI",
+			EnvVar: "AUTH0_JWKS_URI",
 		},
 		cli.StringSliceFlag{
-			Name:   "auth0-client-id",
-			Usage:  "an Auth0 client ID",
-			EnvVar: "AUTH0_CLIENT_ID",
+			Name:   "auth0-audience",
+			Usage:  "an Auth0 audience",
+			EnvVar: "AUTH0_AUDIENCE",
+		},
+		cli.StringFlag{
+			Name:   "auth0-issuer",
+			EnvVar: "AUTH0_ISSUER",
+			Value:  "an Auth0 issuer",
 		},
 		cli.StringFlag{
 			Name:   "listen-address",
@@ -97,8 +102,9 @@ func action(ctx *cli.Context) error {
 	}
 
 	authMiddleware := auth.NewMiddleware(
-		ctx.String("auth0-domain"),
-		[]string{ctx.String("auth0-client-id")},
+		ctx.String("auth0-jwks-uri"),
+		ctx.StringSlice("auth0-audience"),
+		ctx.String("auth0-issuer"),
 	)
 
 	graphqlHandler := graphql.Handler{}

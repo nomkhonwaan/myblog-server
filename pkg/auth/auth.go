@@ -2,13 +2,11 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"net/http"
-
-	"gopkg.in/square/go-jose.v2"
 
 	"github.com/auth0-community/auth0"
 	"github.com/sirupsen/logrus"
+	"gopkg.in/square/go-jose.v2"
 )
 
 const (
@@ -29,17 +27,18 @@ const (
 // Key used to define a context.Context's key instead of basic type
 type Key int
 
-func NewMiddleware(domain string, audience []string) func(http.Handler) http.Handler {
+// NewMiddleware returns a new authentication middleware which validates token on request header
+func NewMiddleware(jwksURI string, audience []string, issuer string) func(http.Handler) http.Handler {
 	validator := auth0.NewValidator(
 		auth0.NewConfiguration(
 			auth0.NewJWKClient(
 				auth0.JWKClientOptions{
-					URI: fmt.Sprintf("https://%s.auth0.com/.well-known/jwks.json", domain),
+					URI: jwksURI,
 				},
 				nil,
 			),
 			audience,
-			fmt.Sprintf("https://%s.auth0.com", domain),
+			issuer,
 			jose.RS256,
 		),
 		nil,
@@ -53,16 +52,12 @@ func NewMiddleware(domain string, audience []string) func(http.Handler) http.Han
 			if err != nil {
 				logrus.Errorf("[%s] %s: %v", r.Method, r.URL.String(), err)
 			} else {
-				var name, email string
-				var emailVerified bool
-
-				token.Claims("name", &name)
-				token.Claims("email", &email)
-				token.Claims("email_verified", &emailVerified)
-
-				ctx = context.WithValue(ctx, Name, name)
-				ctx = context.WithValue(ctx, Email, email)
-				ctx = context.WithValue(ctx, EmailVerified, emailVerified)
+				claims := make(map[string]interface{})
+				validator.Claims(r, token, &claims)
+				ctx = context.WithValue(ctx, Name, claims["name"])
+				ctx = context.WithValue(ctx, Email, claims["email"])
+				ctx = context.WithValue(ctx, EmailVerified, claims["email_verified"])
+				logrus.Info(claims)
 			}
 
 			next.ServeHTTP(w, r.WithContext(ctx))
