@@ -5,19 +5,24 @@ import (
 
 	graphql "github.com/graph-gophers/graphql-go"
 	"github.com/nomkhonwaan/myblog-server/pkg/post"
+	"github.com/nomkhonwaan/myblog-server/pkg/tag"
 )
 
 // PostResolver is a Post's resolver which resolves all Post's fields
 type PostResolver struct {
 	*post.Post
+	TagRepository tag.Repositorier
 }
 
-// NewPostResolver creates and returns a new PostResolver if Post is not nil
-func NewPostResolver(p *post.Post) *PostResolver {
+// NewPostResolver creates and returns a new PostResolver
+func NewPostResolver(p *post.Post, tagRepository tag.Repositorier) *PostResolver {
 	if p == nil {
 		return nil
 	}
-	return &PostResolver{Post: p}
+	return &PostResolver{
+		Post:          p,
+		TagRepository: tagRepository,
+	}
 }
 
 // ID returns a Post's ID
@@ -63,7 +68,15 @@ func (r *PostResolver) Markdown() *string {
 
 // Tags returns a list of Post's tag
 func (r *PostResolver) Tags() (*[]*TagResolver, error) {
-	return nil, nil
+	var err error
+
+	for i, t := range r.Post.Tags {
+		r.Post.Tags[i], err = r.TagRepository.FindByID(t.ID.Hex())
+		if err != nil {
+			return nil, err
+		}
+	}
+	return NewTagsResolver(r.Post.Tags), nil
 }
 
 // CreatedAt returns a date that this Post was created

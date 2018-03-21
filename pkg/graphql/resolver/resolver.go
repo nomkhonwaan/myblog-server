@@ -20,7 +20,7 @@ func (r *Resolver) PublishedPost(_ context.Context, args struct{ ID graphql.ID }
 	if err != nil {
 		return nil, err
 	}
-	return NewPostResolver(p), nil
+	return NewPostResolver(p, r.TagRepository), nil
 }
 
 // Tag is an implemented function of GraphQL's queries which returns a Tag from its ID

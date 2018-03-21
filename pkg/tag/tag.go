@@ -5,6 +5,7 @@ import (
 
 	dld "github.com/nicksrandall/dataloader"
 	"github.com/nomkhonwaan/myblog-server/pkg/dataloader"
+	"github.com/nomkhonwaan/myblog-server/pkg/dataloader/cache"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -39,11 +40,13 @@ type Repository struct {
 
 // NewRepository returns a new Tag's repository with dataloader configured
 func NewRepository(db *mgo.Database) Repository {
+	c, _ := cache.New(100)
+
 	return Repository{
 		db: db,
 		loader: dld.NewBatchedLoader(
 			dataloader.NewBatchFunc(db.C("tags"), NewPlaceholder),
-			dld.WithCache(&dld.NoCache{}),
+			dld.WithCache(c),
 		),
 	}
 }
