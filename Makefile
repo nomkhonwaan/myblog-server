@@ -10,6 +10,7 @@ BINDATA := $(shell which go-bindata)
 DEP := $(shell which dep)
 MOCKGEN := $(shell which mockgen)
 GINKGO := $(shell which ginkgo)
+PACKAGE := github.com/nomkhonwaan/myblog-server
 
 # Docker 
 DOCKER := $(shell which docker)
@@ -60,8 +61,8 @@ build: clean generate-bindata
 	$(GO) build \
 		-o $(GOPATH)/bin/myblog-server \
 		-ldflags " \
-			-X main.version=$(VERSION) \
-			-X main.revision=$(REVISION) \
+			-X $(PACKAGE)/cmd/myblog/app.version=$(VERSION) \
+			-X $(PACKAGE)/cmd/myblog/app.revision=$(REVISION) \
 		" \
 		cmd/myblog/main.go
 

@@ -17,8 +17,8 @@ RUN apk add -u --no-cache curl git && \
     dep ensure -add github.com/jteeuwen/go-bindata && \
     go build \
       -ldflags " \
-        -X main.version=${VERSION} \
-        -X main.revision=${REVISION}" \
+        -X ${PACKAGE}/cmd/myblog/app.version=${VERSION} \
+        -X ${PACKAGE}/cmd/myblog/app.revision=${REVISION}" \
       -o /usr/local/bin/myblog-server \
       cmd/myblog/main.go
 
