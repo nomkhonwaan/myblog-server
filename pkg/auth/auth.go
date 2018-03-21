@@ -50,7 +50,7 @@ func NewMiddleware(jwksURI string, audience []string, issuer string) func(http.H
 
 			token, err := validator.ValidateRequest(r)
 			if err != nil {
-				logrus.Errorf("[%s] %s: %v", r.Method, r.URL.String(), err)
+				logrus.Warnf("[%s] %s: %v", r.Method, r.URL.String(), err)
 			} else {
 				claims := make(map[string]interface{})
 				validator.Claims(r, token, &claims)
