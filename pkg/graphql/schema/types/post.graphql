@@ -21,6 +21,9 @@ type Post {
   # A Post's content in Markdown format
   markdown: String
 
+  # Return a list of Post's tag
+  tags: [Tag]
+
   # An RFC3339 date format that the Post was created
   createdAt: String!
 

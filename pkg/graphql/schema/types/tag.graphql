@@ -1,0 +1,14 @@
+# A Tag entity
+type Tag {
+  # A Tag's ID
+  id: ID!
+
+  # A Tag's name
+  name: String!
+
+  # A Tag's slug
+  slug: String!
+
+  # A link to this Tag
+  link: String!
+}

@@ -30,6 +30,11 @@ func (p *Post) Key() string {
 	return p.ID.Hex()
 }
 
+// NewPlaceholder returns a new Post's object
+func NewPlaceholder() dataloader.Placeholder {
+	return dataloader.Placeholder(&Post{})
+}
+
 // Repositorier is a Post's repository interface
 type Repositorier interface {
 	FindByID(id string) (*Post, error)
@@ -40,11 +45,6 @@ type Repositorier interface {
 type Repository struct {
 	db     *mgo.Database
 	loader *dld.Loader
-}
-
-// NewPlaceholder returns a new Post's object
-func NewPlaceholder() dataloader.Placeholder {
-	return dataloader.Placeholder(&Post{})
 }
 
 // NewRepository returns a new Post's repository with dataloader configured

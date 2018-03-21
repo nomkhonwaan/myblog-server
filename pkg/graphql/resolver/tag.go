@@ -10,6 +10,14 @@ type TagResolver struct {
 	*tag.Tag
 }
 
+// NewTagResolver creates and returns a new TagResolver if Tag is not nil
+func NewTagResolver(t *tag.Tag) *TagResolver {
+	if t == nil {
+		return nil
+	}
+	return &TagResolver{Tag: t}
+}
+
 // ID returns a Tag's ID
 func (r *TagResolver) ID() graphql.ID {
 	return graphql.ID(r.Tag.ID.Hex())

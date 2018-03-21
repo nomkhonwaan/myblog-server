@@ -12,6 +12,14 @@ type PostResolver struct {
 	*post.Post
 }
 
+// NewPostResolver creates and returns a new PostResolver if Post is not nil
+func NewPostResolver(p *post.Post) *PostResolver {
+	if p == nil {
+		return nil
+	}
+	return &PostResolver{Post: p}
+}
+
 // ID returns a Post's ID
 func (r *PostResolver) ID() graphql.ID {
 	return graphql.ID(r.Post.ID.Hex())
@@ -51,6 +59,11 @@ func (r *PostResolver) HTML() *string {
 // Markdown returns a Post's content in Markdown format
 func (r *PostResolver) Markdown() *string {
 	return &r.Post.Markdown
+}
+
+// Tags returns a list of Post's tag
+func (r *PostResolver) Tags() (*[]*TagResolver, error) {
+	return nil, nil
 }
 
 // CreatedAt returns a date that this Post was created

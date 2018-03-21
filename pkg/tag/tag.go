@@ -1,7 +1,11 @@
 package tag
 
 import (
+	"context"
+
+	dld "github.com/nicksrandall/dataloader"
 	"github.com/nomkhonwaan/myblog-server/pkg/dataloader"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -20,4 +24,36 @@ func (t *Tag) Key() string {
 // NewPlaceholder returns a new Tag's object
 func NewPlaceholder() dataloader.Placeholder {
 	return dataloader.Placeholder(&Tag{})
+}
+
+// Repositorier is a Tag's repository interface
+type Repositorier interface {
+	FindByID(id string) (*Tag, error)
+}
+
+// Repository is an implemented of Tag's Repositorier interface
+type Repository struct {
+	db     *mgo.Database
+	loader *dld.Loader
+}
+
+// NewRepository returns a new Tag's repository with dataloader configured
+func NewRepository(db *mgo.Database) Repository {
+	return Repository{
+		db: db,
+		loader: dld.NewBatchedLoader(
+			dataloader.NewBatchFunc(db.C("tags"), NewPlaceholder),
+			dld.WithCache(&dld.NoCache{}),
+		),
+	}
+}
+
+// FindByID finds a single Tag from its ID
+func (repo Repository) FindByID(id string) (*Tag, error) {
+	t, err := repo.loader.Load(context.TODO(), dld.StringKey(id))()
+	if err != nil {
+		return nil, err
+	}
+
+	return t.(*Tag), nil
 }

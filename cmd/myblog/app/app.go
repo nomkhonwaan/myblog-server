@@ -1,8 +1,6 @@
 package app
 
 import (
-	"crypto/rsa"
-	"encoding/base64"
 	"fmt"
 	"net/http"
 	"os"
@@ -10,7 +8,8 @@ import (
 	"syscall"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/nomkhonwaan/myblog-server/pkg/tag"
+
 	"github.com/facebookgo/inject"
 	"github.com/nomkhonwaan/myblog-server/pkg/auth"
 	"github.com/nomkhonwaan/myblog-server/pkg/graphql"
@@ -115,6 +114,7 @@ func action(ctx *cli.Context) error {
 		&inject.Object{Name: "pkg/graphql.Handler", Value: &graphqlHandler},
 		&inject.Object{Name: "pkg/graphql/resolver.Resolver", Value: &resolver.Resolver{}},
 		&inject.Object{Name: "pkg/post.Repositorier", Value: post.NewRepository(session.Clone().DB(defaultDatabaseName))},
+		&inject.Object{Name: "pkg/tag.Repositorier", Value: tag.NewRepository(session.Clone().DB(defaultDatabaseName))},
 	)
 	if err != nil {
 		return err
@@ -172,13 +172,4 @@ func makeANewConnectionToMongodb(connectionURI string) (*mgo.Session, error) {
 	}
 
 	return mgo.DialWithInfo(dialInfo)
-}
-
-func parseRSAPublicKeyFromBase64EncodedString(encodedPublicKey string) (*rsa.PublicKey, error) {
-	decodedPublicKey, err := base64.StdEncoding.DecodeString(encodedPublicKey)
-	if err != nil {
-		return nil, err
-	}
-
-	return jwt.ParseRSAPublicKeyFromPEM(decodedPublicKey)
 }

@@ -2,4 +2,7 @@
 type Query {
   # Return a published Post from its ID
   publishedPost(id: ID!): Post
+
+  # Return a Tag from its ID
+  tag(id: ID!): Tag
 }
