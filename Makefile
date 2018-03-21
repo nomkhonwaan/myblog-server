@@ -26,6 +26,13 @@ fi
 default: generate-bindata
 	$(GO) run cmd/myblog/main.go
 
+.PHONY: install
+install:
+ifeq ($(DEP),)
+	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+endif
+	$(DEP) ensure
+
 .PHONY: generate-bindata
 generate-bindata:
 ifeq ($(BINDATA),)
