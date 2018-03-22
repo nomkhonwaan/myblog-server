@@ -17,10 +17,9 @@ DOCKER := $(shell which docker)
 DOCKER_IMAGE_REPOSITORY := nomkhonwaan/myblog-server
 DOCKER_IMAGE_TAG := latest
 
-if [ "$(CURRENT_BRANCH)" == "master" ]; \
-then \
-	$(eval DOCKER_IMAGE_TAG := $(VERSION)); \
-fi
+ifeq ($(CURRENT_BRANCH), master)
+	$(eval DOCKER_IMAGE_TAG := $(VERSION))
+endif
 
 .PHONY: default
 default: generate-bindata
