@@ -80,3 +80,7 @@ build-docker:
 		--build-arg="REVISION=$(REVISION)" \
 		--tag $(DOCKER_IMAGE_REPOSITORY):$(DOCKER_IMAGE_TAG) \
 		.
+
+.PHONY: publish-to-registry
+publish-to-registry:
+	$(DOCKER) push $(DOCKER_IMAGE_REPOSITORY):$(DOCKER_IMAGE_TAG)
