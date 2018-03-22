@@ -29,6 +29,7 @@ default: generate-bindata
 install:
 ifeq ($(DEP),)
 	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+	$(eval DEP := $(shell which dep))
 endif
 	$(DEP) ensure
 
