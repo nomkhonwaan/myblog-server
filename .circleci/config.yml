@@ -3,7 +3,7 @@ jobs:
   install:
     docker:
     - image: circleci/golang:1.10
-    working_directory: ~/repo
+    working_directory: /go/src/github.com/nomkhonwaan/myblog-server
     steps:
     - checkout
     - run: make install
@@ -13,7 +13,7 @@ jobs:
         key: v1-dependencies-{{ checksum "Gopkg.toml" }}
   build:
     machine: true
-    working_directory: ~/repo
+    working_directory: /go/src/github.com/nomkhonwaan/myblog-server
     steps:
     - setup_remote_docker:
         docker_layer_caching: true
@@ -25,7 +25,7 @@ jobs:
   test:
     docker:
     - image: circleci/golang:1.10
-    working_directory: ~/repo
+    working_directory: /go/src/github.com/nomkhonwaan/myblog-server
     steps:
     - checkout
     - restore_cache:
