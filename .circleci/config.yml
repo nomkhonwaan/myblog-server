@@ -12,10 +12,11 @@ jobs:
         - vendor
         key: v1-dependencies-{{ checksum "Gopkg.toml" }}
   build:
-    docker_layer_caching: true
+    machine: true
     working_directory: ~/repo
     steps:
-    - setup_remote_docker
+    - setup_remote_docker:
+        docker_layer_caching: true
     - checkout
     - restore_cache:
         key:
@@ -32,6 +33,7 @@ jobs:
         - v1-dependencies-{{ checksum "Gopkg.toml" }}
     - run: make test
   publish_to_registry:
+    machine: true
     steps:
     - setup_remote_docker
     - run: |
