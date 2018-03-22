@@ -22,10 +22,9 @@ jobs:
         - v1-dependencies-{{ checksum "Gopkg.toml" }}
     - run: make test
   build:
+    machine: true
     working_directory: /go/src/github.com/nomkhonwaan/myblog-server
     steps:
-    - setup_remote_docker:
-        docker_layer_caching: true
     - checkout
     - restore_cache:
         keys:
