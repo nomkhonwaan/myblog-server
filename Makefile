@@ -36,6 +36,7 @@ endif
 generate-bindata:
 ifeq ($(shell which $(BINDATA)),)
 	$(GO) get -v -u github.com/jteeuwen/go-bindata
+	$(GO) build -o $(GOPATH)/bin/go-bindata $(GOPATH)/src/github.com/jteeuwen/go-bindata/go-bindata/*.go
 endif
 	$(BINDATA) -o pkg/generated/bindata.go -pkg generated pkg/graphql/schema/... pkg/graphql/graphiql/...
 
