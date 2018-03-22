@@ -21,17 +21,12 @@ jobs:
         keys:
         - v1-dependencies-{{ checksum "Gopkg.toml" }}
     - run: make test
-  build:
+  build_and_publish_to_registry:
     machine: true
     working_directory: ~/repo
     steps:
     - checkout
     - run: make build-docker
-  publish_to_registry:
-    machine: true
-    working_directory: ~/repo
-    steps:
-    - checkout
     - run: |
         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - run: make publish-to-registry
@@ -43,9 +38,6 @@ workflows:
     - test:
         requires:
         - install
-    - build:
+    - build_and_publish_to_registry:
         requires:
         - test
-    - publish_to_registry:
-        requires:
-        - build
