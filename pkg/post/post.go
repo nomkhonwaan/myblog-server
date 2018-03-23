@@ -12,6 +12,19 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// Repositorier is a Post's repository interface
+type Repositorier interface {
+	FindByID(id string) (*Post, error)
+	FindPublishedByID(id string) (*Post, error)
+	FindAllPublished(
+		offset, limit int,
+		orderBy struct {
+			Field     string
+			Direction string
+		},
+	) ([]*Post, error)
+}
+
 // Post represent an entity of Post
 type Post struct {
 	ID          bson.ObjectId `bson:"_id"`
@@ -46,19 +59,6 @@ func (ps Posts) Keys() []string {
 // NewPlaceholder returns a new Post's object
 func NewPlaceholder() dataloader.Placeholder {
 	return dataloader.Placeholder(&Post{})
-}
-
-// Repositorier is a Post's repository interface
-type Repositorier interface {
-	FindByID(id string) (*Post, error)
-	FindPublishedByID(id string) (*Post, error)
-	FindAllPublished(
-		offset, limit int,
-		orderBy struct {
-			Field     string
-			Direction string
-		},
-	)
 }
 
 // Repository is an implemented of Post's Repositorier interface
@@ -108,7 +108,7 @@ func (repo Repository) FindAllPublished(
 	offset, limit int,
 	orderBy struct {
 		Field     string
-		Directory string
+		Direction string
 	},
 ) ([]*Post, error) {
 	return nil, nil

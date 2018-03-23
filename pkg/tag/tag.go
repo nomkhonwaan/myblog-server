@@ -10,6 +10,18 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// Repositorier is a Tag's repository interface
+type Repositorier interface {
+	FindByID(id string) (*Tag, error)
+	FindAll(
+		offset, limit int,
+		orderBy struct {
+			Field     string
+			Direction string
+		},
+	) ([]*Tag, error)
+}
+
 // Tag represent an entity of Tag
 type Tag struct {
 	ID   bson.ObjectId `bson:"_id"`
@@ -37,18 +49,6 @@ func (ts Tags) Keys() []string {
 // NewPlaceholder returns a new Tag's object
 func NewPlaceholder() dataloader.Placeholder {
 	return dataloader.Placeholder(&Tag{})
-}
-
-// Repositorier is a Tag's repository interface
-type Repositorier interface {
-	FindByID(id string) (*Tag, error)
-	FindAll(
-		offset, limit int,
-		orderBy struct {
-			Field     string
-			Direction string
-		},
-	) ([]*Tag, error)
 }
 
 // Repository is an implemented of Tag's Repositorier interface
