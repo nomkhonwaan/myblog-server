@@ -5,4 +5,16 @@ type Query {
 
   # Return a Tag from its ID
   tag(id: ID!): Tag
+
+  # Return a list of Tags
+  tags(
+    offset: Int
+    limit: Int
+    orderBy: TagOrderByInput
+  ): [Tag]
+}
+
+enum OrderByDirection {
+  ASC
+  DESC
 }

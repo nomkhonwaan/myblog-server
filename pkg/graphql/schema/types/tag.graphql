@@ -12,3 +12,12 @@ type Tag {
   # A link to this Tag
   link: String!
 }
+
+enum TagOrderByField {
+  SLUG
+}
+
+input TagOrderByInput {
+  field: TagOrderByField
+  direction: OrderByDirection
+}

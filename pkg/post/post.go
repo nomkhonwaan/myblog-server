@@ -27,8 +27,20 @@ type Post struct {
 }
 
 // Key returns a Placeholder key string
-func (p *Post) Key() string {
+func (p Post) Key() string {
 	return p.ID.Hex()
+}
+
+// Posts represent a list of Posts
+type Posts []*Post
+
+// Keys returns a list of Placeholder key string
+func (ps Posts) Keys() []string {
+	keys := make([]string, len(ps))
+	for i, p := range ps {
+		keys[i] = p.Key()
+	}
+	return keys
 }
 
 // NewPlaceholder returns a new Post's object
@@ -40,6 +52,13 @@ func NewPlaceholder() dataloader.Placeholder {
 type Repositorier interface {
 	FindByID(id string) (*Post, error)
 	FindPublishedByID(id string) (*Post, error)
+	FindAllPublished(
+		offset, limit int,
+		orderBy struct {
+			Field     string
+			Direction string
+		},
+	)
 }
 
 // Repository is an implemented of Post's Repositorier interface
@@ -82,4 +101,15 @@ func (repo Repository) FindPublishedByID(id string) (*Post, error) {
 	}
 
 	return p, nil
+}
+
+// FindAllPublished finds all published Posts
+func (repo Repository) FindAllPublished(
+	offset, limit int,
+	orderBy struct {
+		Field     string
+		Directory string
+	},
+) ([]*Post, error) {
+	return nil, nil
 }

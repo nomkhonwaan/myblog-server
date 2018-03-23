@@ -18,8 +18,20 @@ type Tag struct {
 }
 
 // Key returns a Placeholder key string
-func (t *Tag) Key() string {
+func (t Tag) Key() string {
 	return t.ID.Hex()
+}
+
+// Tags represent a list of Tags
+type Tags []*Tag
+
+// Keys returns a list of Placeholder key string
+func (ts Tags) Keys() []string {
+	keys := make([]string, len(ts))
+	for i, t := range ts {
+		keys[i] = t.Key()
+	}
+	return keys
 }
 
 // NewPlaceholder returns a new Tag's object
@@ -30,6 +42,13 @@ func NewPlaceholder() dataloader.Placeholder {
 // Repositorier is a Tag's repository interface
 type Repositorier interface {
 	FindByID(id string) (*Tag, error)
+	FindAll(
+		offset, limit int,
+		orderBy struct {
+			Field     string
+			Direction string
+		},
+	) ([]*Tag, error)
 }
 
 // Repository is an implemented of Tag's Repositorier interface
@@ -59,4 +78,32 @@ func (repo Repository) FindByID(id string) (*Tag, error) {
 	}
 
 	return t.(*Tag), nil
+}
+
+// FindAll finds all Tags
+func (repo Repository) FindAll(
+	offset, limit int,
+	orderBy struct {
+		Field     string
+		Direction string
+	},
+) ([]*Tag, error) {
+	q := repo.db.C("tags").Find(nil).Select(bson.M{"_id": 1})
+	q.Skip(offset)
+	if limit > 0 {
+		q.Limit(limit)
+	}
+
+	var ts Tags
+	err := q.All(&ts)
+	if err != nil {
+		return nil, err
+	}
+
+	data, _ := repo.loader.LoadMany(context.TODO(), dld.NewKeysFromStrings(ts.Keys()))()
+	for i := range ts {
+		ts[i] = data[i].(*Tag)
+	}
+
+	return ts, nil
 }
