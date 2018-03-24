@@ -45,7 +45,11 @@ generate-mock:
 ifeq ($(shell which $(MOCKGEN)),)
 	$(GO) get -v -u github.com/golang/mock/mockgen
 endif
-	# $(MOCKGEN) -source=pkg/post/post.go -package post_test Repositorier > pkg/post/post_mock.go
+	$(MOCKGEN) -source pkg/mongodb/collection.go -package mongodb_test Collection > pkg/mongodb/collection_mock.go
+	$(MOCKGEN) -source pkg/mongodb/database.go -package mongodb_test Database > pkg/mongodb/database_mock.go
+	$(MOCKGEN) -source pkg/mongodb/iter.go -package mongodb_test Iter > pkg/mongodb/iter_mock.go
+	$(MOCKGEN) -source pkg/mongodb/query.go -package mongodb_test Query > pkg/mongodb/query_mock.go
+	$(MOCKGEN) -source pkg/mongodb/session.go -package mongodb_test Session > pkg/mongodb/session_mock.go
 
 .PHONY: test
 test: generate-bindata generate-mock

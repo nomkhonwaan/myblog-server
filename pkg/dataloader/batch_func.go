@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/nicksrandall/dataloader"
-	mgo "gopkg.in/mgo.v2"
+	"github.com/nomkhonwaan/myblog-server/pkg/mongodb"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -14,7 +14,7 @@ type Placeholder interface {
 }
 
 // NewBatchFunc returns a new dataloader.BatchFunc
-func NewBatchFunc(c *mgo.Collection, newPlaceholderFunc func() Placeholder) dataloader.BatchFunc {
+func NewBatchFunc(c mongodb.Collection, newPlaceholderFn func() Placeholder) dataloader.BatchFunc {
 	return func(_ context.Context, keys dataloader.Keys) []*dataloader.Result {
 		results := make([]*dataloader.Result, len(keys))
 		keyValuePairs := make(map[string]*dataloader.Result)
@@ -24,14 +24,14 @@ func NewBatchFunc(c *mgo.Collection, newPlaceholderFunc func() Placeholder) data
 			q["_id"].(bson.M)["$in"].([]bson.ObjectId)[i] = bson.ObjectIdHex(key.String())
 		}
 
-		placeholder := newPlaceholderFunc()
+		placeholder := newPlaceholderFn()
 		iter := c.Find(q).Iter()
 		for iter.Next(placeholder) {
 			keyValuePairs[placeholder.Key()] = &dataloader.Result{
 				Data:  placeholder,
 				Error: nil,
 			}
-			placeholder = newPlaceholderFunc()
+			placeholder = newPlaceholderFn()
 		}
 
 		for i, key := range keys {

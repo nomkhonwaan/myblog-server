@@ -6,7 +6,7 @@ import (
 	dld "github.com/nicksrandall/dataloader"
 	"github.com/nomkhonwaan/myblog-server/pkg/dataloader"
 	"github.com/nomkhonwaan/myblog-server/pkg/dataloader/cache"
-	mgo "gopkg.in/mgo.v2"
+	"github.com/nomkhonwaan/myblog-server/pkg/mongodb"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -53,12 +53,12 @@ func NewPlaceholder() dataloader.Placeholder {
 
 // Repository is an implemented of Tag's Repositorier interface
 type Repository struct {
-	db     *mgo.Database
+	db     mongodb.Database
 	loader *dld.Loader
 }
 
 // NewRepository returns a new Tag's repository with dataloader configured
-func NewRepository(db *mgo.Database) Repository {
+func NewRepository(db mongodb.Database) Repository {
 	c, _ := cache.New(100)
 
 	return Repository{

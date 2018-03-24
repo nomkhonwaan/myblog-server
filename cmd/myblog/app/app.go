@@ -8,6 +8,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/nomkhonwaan/myblog-server/pkg/mongodb"
 	"github.com/nomkhonwaan/myblog-server/pkg/tag"
 
 	"github.com/facebookgo/inject"
@@ -165,11 +166,11 @@ func setLogLevelAndOutputTextFormat(loggingLevel string) {
 	})
 }
 
-func makeANewConnectionToMongodb(connectionURI string) (*mgo.Session, error) {
+func makeANewConnectionToMongodb(connectionURI string) (mongodb.Session, error) {
 	dialInfo, err := mgo.ParseURL(connectionURI)
 	if err != nil {
 		return nil, err
 	}
 
-	return mgo.DialWithInfo(dialInfo)
+	return mongodb.DialWithInfo(dialInfo)
 }
