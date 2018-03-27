@@ -64,7 +64,7 @@ func NewPlaceholder() dataloader.Placeholder {
 // Repository is an implemented of Post's Repositorier interface
 type Repository struct {
 	db     mongodb.Database
-	loader *dld.Loader
+	loader dld.Interface
 }
 
 // NewRepository returns a new Post's repository with dataloader configured
