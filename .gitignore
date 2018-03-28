@@ -15,3 +15,6 @@
 
 # dependencies
 vendor/
+
+# Sed cache
+*-e
