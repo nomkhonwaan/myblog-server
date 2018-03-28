@@ -27,9 +27,7 @@ func (w *wrappedSession) DB(name string) Database {
 }
 
 func (w *wrappedSession) Clone() Session {
-	// logrus.Info(w.Session.Clone())
-	return w
-	// return &wrappedSession{Session: w.Session.Clone()}
+	return &wrappedSession{Session: w.Session.Clone()}
 }
 
 func (w *wrappedSession) Close() {
