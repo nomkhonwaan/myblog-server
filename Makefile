@@ -43,6 +43,7 @@ endif
 .PHONY: generate-mock
 generate-mock:
 ifeq ($(shell which $(MOCKGEN)),)
+	$(GO) get -v -u github.com/golang/mock/gomock
 	$(GO) get -v -u github.com/golang/mock/mockgen
 endif
 	$(MOCKGEN) -source vendor/github.com/nicksrandall/dataloader/dataloader.go -package dataloader_mock Interface > pkg/dataloader/mock/dataloader_mock.go
