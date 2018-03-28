@@ -67,7 +67,7 @@ fix-dataloader-mock:
 	sed -i -e 's/(Interface)/\(dataloader.Interface)/g' pkg/dataloader/mock/dataloader_mock.go
 
 .PHONY: test
-test: generate-bindata generate-mock
+test:
 ifeq ($(shell which $(GINKGO)),)
 	$(GO) get -v -u github.com/onsi/ginkgo/ginkgo
 	$(GO) get -v -u github.com/onsi/gomega/...
