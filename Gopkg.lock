@@ -26,6 +26,12 @@
   version = "v1.0.0"
 
 [[projects]]
+  name = "github.com/golang/mock"
+  packages = ["gomock"]
+  revision = "13f360950a79f5864a972c786a10a50e44b69541"
+  version = "v1.0.0"
+
+[[projects]]
   branch = "master"
   name = "github.com/graph-gophers/graphql-go"
   packages = [
@@ -212,6 +218,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "245361c7c1b0f750d88043ae2b9192098a74cd2d9749a3d08a7838b3a1e15b37"
+  inputs-digest = "5a62c393576dda0e6835b405c2efa22ca7c0215c85d2bf13af6a6565769da7c7"
   solver-name = "gps-cdcl"
   solver-version = 1

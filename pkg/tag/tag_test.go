@@ -1,8 +1,11 @@
 package tag_test
 
 import (
+	"context"
 	"reflect"
 
+	dld "github.com/nicksrandall/dataloader"
+	"github.com/nomkhonwaan/myblog-server/pkg/dataloader/mock"
 	. "github.com/nomkhonwaan/myblog-server/pkg/tag"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -41,11 +44,43 @@ var _ = Describe("Tag", func() {
 		})
 	})
 
-	// Describe("Repository.FindByID", func() {
-	// 	Context("with existing Post'd ID", func() {
-	// 		It("should return a Post from its ID", func() {
-	// 			repo := Repository{db}
-	// 		})
-	// 	})
-	// })
+	Describe("Repository.FindByID", func() {
+		Context("with existing Tag's ID", func() {
+			It("should return a Tag from its ID", func() {
+				loader := dataloader_mock.NewMockInterface(ctrl)
+				id := bson.NewObjectId()
+				repo := Repository{Loader: loader}
+				loader.
+					EXPECT().
+					Load(context.TODO(), dld.StringKey(id.Hex())).
+					Return(dld.Thunk(func() (interface{}, error) {
+						return &Tag{
+							ID: id,
+						}, nil
+					}))
+
+				t, err := repo.FindByID(id.Hex())
+				Expect(err).To(BeNil())
+				Expect(t.ID).To(Equal(id))
+			})
+		})
+
+		Context("with non-existing Tag's ID", func() {
+			It("should return a nil Tag's pointer", func() {
+				loader := dataloader_mock.NewMockInterface(ctrl)
+				id := bson.NewObjectId()
+				repo := Repository{Loader: loader}
+				loader.
+					EXPECT().
+					Load(context.TODO(), dld.StringKey(id.Hex())).
+					Return(dld.Thunk(func() (interface{}, error) {
+						return nil, nil
+					}))
+
+				t, err := repo.FindByID(id.Hex())
+				Expect(err).To(BeNil())
+				Expect(t).To(BeNil())
+			})
+		})
+	})
 })

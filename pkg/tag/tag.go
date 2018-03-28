@@ -53,8 +53,8 @@ func NewPlaceholder() dataloader.Placeholder {
 
 // Repository is an implemented of Tag's Repositorier interface
 type Repository struct {
-	db     mongodb.Database
-	loader dld.Interface
+	Database mongodb.Database
+	Loader   dld.Interface
 }
 
 // NewRepository returns a new Tag's repository with dataloader configured
@@ -62,8 +62,8 @@ func NewRepository(db mongodb.Database) Repository {
 	c, _ := cache.New(100)
 
 	return Repository{
-		db: db,
-		loader: dld.NewBatchedLoader(
+		Database: db,
+		Loader: dld.NewBatchedLoader(
 			dataloader.NewBatchFunc(db.C("tags"), NewPlaceholder),
 			dld.WithCache(c),
 		),
@@ -72,12 +72,14 @@ func NewRepository(db mongodb.Database) Repository {
 
 // FindByID finds a single Tag from its ID
 func (repo Repository) FindByID(id string) (*Tag, error) {
-	t, err := repo.loader.Load(context.TODO(), dld.StringKey(id))()
+	t, err := repo.Loader.Load(context.TODO(), dld.StringKey(id))()
 	if err != nil {
 		return nil, err
 	}
-
-	return t.(*Tag), nil
+	if t != nil {
+		return t.(*Tag), nil
+	}
+	return nil, nil
 }
 
 // FindAll finds all Tags
@@ -88,7 +90,7 @@ func (repo Repository) FindAll(
 		Direction string
 	},
 ) ([]*Tag, error) {
-	q := repo.db.C("tags").Find(nil).Select(bson.M{"_id": 1})
+	q := repo.Database.C("tags").Find(nil).Select(bson.M{"_id": 1})
 	q.Skip(offset)
 	if limit > 0 {
 		q.Limit(limit)
@@ -100,7 +102,7 @@ func (repo Repository) FindAll(
 		return nil, err
 	}
 
-	data, _ := repo.loader.LoadMany(context.TODO(), dld.NewKeysFromStrings(ts.Keys()))()
+	data, _ := repo.Loader.LoadMany(context.TODO(), dld.NewKeysFromStrings(ts.Keys()))()
 	for i := range ts {
 		ts[i] = data[i].(*Tag)
 	}

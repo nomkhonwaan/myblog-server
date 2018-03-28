@@ -86,8 +86,10 @@ func (repo Repository) FindByID(id string) (*Post, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	return p.(*Post), nil
+	if p != nil {
+		return p.(*Post), nil
+	}
+	return nil, nil
 }
 
 // FindPublishedByID finds a single published Post from its ID
