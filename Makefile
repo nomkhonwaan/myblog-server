@@ -45,11 +45,26 @@ generate-mock:
 ifeq ($(shell which $(MOCKGEN)),)
 	$(GO) get -v -u github.com/golang/mock/mockgen
 endif
+	$(MOCKGEN) -source vendor/github.com/nicksrandall/dataloader/dataloader.go -package dataloader_mock Interface > pkg/dataloader/mock/dataloader_mock.go
+	make fix-dataloader-mock
 	$(MOCKGEN) -source pkg/mongodb/collection.go -package mongodb_mock Collection > pkg/mongodb/mock/collection_mock.go
 	$(MOCKGEN) -source pkg/mongodb/database.go -package mongodb_mock Database > pkg/mongodb/mock/database_mock.go
 	$(MOCKGEN) -source pkg/mongodb/iter.go -package mongodb_mock Iter > pkg/mongodb/mock/iter_mock.go
 	$(MOCKGEN) -source pkg/mongodb/query.go -package mongodb_mock Query > pkg/mongodb/mock/query_mock.go
 	$(MOCKGEN) -source pkg/mongodb/session.go -package mongodb_mock Session > pkg/mongodb/mock/session_mock.go
+
+.PHONY: fix-dataloader-mock
+fix-dataloader-mock:
+	sed -i -e 's/context "context"/context "context"\'$$'\n        "github.com\/nicksrandall\/dataloader"/' pkg/dataloader/mock/dataloader_mock.go
+	sed -i -e 's/arg1 Key/arg1 dataloader.Key/g' pkg/dataloader/mock/dataloader_mock.go
+	sed -i -e 's/key Key/key dataloader.Key/g' pkg/dataloader/mock/dataloader_mock.go
+	sed -i -e 's/arg1 Keys/arg1 dataloader.Keys/g' pkg/dataloader/mock/dataloader_mock.go
+	sed -i -e 's/) Thunk/) dataloader.Thunk/g' pkg/dataloader/mock/dataloader_mock.go
+	sed -i -e 's/(Thunk)/(dataloader.Thunk)/g' pkg/dataloader/mock/dataloader_mock.go
+	sed -i -e 's/) ThunkMany/) dataloader.ThunkMany/g' pkg/dataloader/mock/dataloader_mock.go
+	sed -i -e 's/(ThunkMany)/\(dataloader.ThunkMany)/g' pkg/dataloader/mock/dataloader_mock.go
+	sed -i -e 's/) Interface/) dataloader.Interface/g' pkg/dataloader/mock/dataloader_mock.go
+	sed -i -e 's/(Interface)/\(dataloader.Interface)/g' pkg/dataloader/mock/dataloader_mock.go
 
 .PHONY: test
 test: generate-bindata generate-mock
