@@ -45,7 +45,7 @@ var _ = Describe("Tag", func() {
 	})
 
 	Describe("Repository.FindByID", func() {
-		Context("with existing Tag's ID", func() {
+		Context("find with existing Tag's ID", func() {
 			It("should return a Tag from its ID", func() {
 				loader := dataloader_mock.NewMockInterface(ctrl)
 				id := bson.NewObjectId()
@@ -65,7 +65,7 @@ var _ = Describe("Tag", func() {
 			})
 		})
 
-		Context("with non-existing Tag's ID", func() {
+		Context("find with non-existing Tag's ID", func() {
 			It("should return a nil Tag's pointer", func() {
 				loader := dataloader_mock.NewMockInterface(ctrl)
 				id := bson.NewObjectId()
@@ -80,6 +80,24 @@ var _ = Describe("Tag", func() {
 				t, err := repo.FindByID(id.Hex())
 				Expect(err).To(BeNil())
 				Expect(t).To(BeNil())
+			})
+		})
+	})
+
+	Describe("repository.FindAll", func() {
+		Context("find first 10 Tags", func() {
+			It("should return a list of first 10 Tags order by alphabet", func() {
+				// db := mongodb_mock.NewMockDatabase(ctrl)
+				// loader := dataloader_mock.NewMockInterface(ctrl)
+				// repo := Repository{
+				// 	Database: db,
+				// 	Loader:   loader,
+				// }
+				// q := mongodb_mock.NewMockQuery(ctrl)
+				// q.EXPECT().Select(bson.M{"_id": 1}).Return(q)
+				// c := mongodb_mock.NewMockCollection(ctrl)
+				// c.EXPECT().Find(nil).Return(q)
+				// db.EXPECT().C("tags").Return(c)
 			})
 		})
 	})
