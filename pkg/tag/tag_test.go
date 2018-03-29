@@ -127,7 +127,11 @@ var _ = Describe("Tag", func() {
 					EXPECT().
 					LoadMany(context.TODO(), dld.NewKeysFromStrings(Tags(mockTags).Keys())).
 					Return(dld.ThunkMany(func() ([]interface{}, []error) {
-						return []interface{}{mockTags}, nil
+						result := make([]interface{}, len(mockTags))
+						for i, t := range mockTags {
+							result[i] = t
+						}
+						return result, nil
 					}))
 
 				ts, err := repo.FindAll(0, 10, struct {

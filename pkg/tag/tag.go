@@ -7,7 +7,6 @@ import (
 	"github.com/nomkhonwaan/myblog-server/pkg/dataloader"
 	"github.com/nomkhonwaan/myblog-server/pkg/dataloader/cache"
 	"github.com/nomkhonwaan/myblog-server/pkg/mongodb"
-	"github.com/sirupsen/logrus"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -102,7 +101,6 @@ func (repo Repository) FindAll(
 	if err != nil {
 		return nil, err
 	}
-	logrus.Info(ts)
 
 	data, _ := repo.Loader.LoadMany(context.TODO(), dld.NewKeysFromStrings(ts.Keys()))()
 	for i := range ts {
