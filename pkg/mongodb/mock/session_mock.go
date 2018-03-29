@@ -6,10 +6,11 @@ package mongodb_mock
 
 import (
 	gomock "github.com/golang/mock/gomock"
+        mongodb "github.com/nomkhonwaan/myblog-server/pkg/mongodb"
 	reflect "reflect"
 )
 
-// MockSession is a mock of Session interface
+// MockSession is a mock of mongodb.Session interface
 type MockSession struct {
 	ctrl     *gomock.Controller
 	recorder *MockSessionMockRecorder
@@ -33,9 +34,9 @@ func (m *MockSession) EXPECT() *MockSessionMockRecorder {
 }
 
 // DB mocks base method
-func (m *MockSession) DB(name string) Database {
+func (m *MockSession) DB(name string) mongodb.Database {
 	ret := m.ctrl.Call(m, "DB", name)
-	ret0, _ := ret[0].(Database)
+	ret0, _ := ret[0].(mongodb.Database)
 	return ret0
 }
 
@@ -45,9 +46,9 @@ func (mr *MockSessionMockRecorder) DB(name interface{}) *gomock.Call {
 }
 
 // Clone mocks base method
-func (m *MockSession) Clone() Session {
+func (m *MockSession) Clone() mongodb.Session {
 	ret := m.ctrl.Call(m, "Clone")
-	ret0, _ := ret[0].(Session)
+	ret0, _ := ret[0].(mongodb.Session)
 	return ret0
 }
 

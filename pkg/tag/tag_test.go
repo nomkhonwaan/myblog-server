@@ -5,12 +5,28 @@ import (
 	"reflect"
 
 	dld "github.com/nicksrandall/dataloader"
-	"github.com/nomkhonwaan/myblog-server/pkg/dataloader/mock"
+	. "github.com/nomkhonwaan/myblog-server/pkg/dataloader/mock"
+	. "github.com/nomkhonwaan/myblog-server/pkg/mongodb/mock"
 	. "github.com/nomkhonwaan/myblog-server/pkg/tag"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"gopkg.in/mgo.v2/bson"
 )
+
+type mockQuery struct {
+	*MockQuery
+	result interface{}
+}
+
+func (q *mockQuery) All(result interface{}) error {
+	resultv := reflect.ValueOf(result)
+	slicev := resultv.Elem()
+	for _, t := range q.result.([]*Tag) {
+		slicev = reflect.Append(slicev, reflect.ValueOf(t))
+	}
+	resultv.Elem().Set(slicev.Slice(0, len(q.result.([]*Tag))))
+	return nil
+}
 
 var _ = Describe("Tag", func() {
 	Describe("Tag.Key", func() {
@@ -47,7 +63,7 @@ var _ = Describe("Tag", func() {
 	Describe("Repository.FindByID", func() {
 		Context("find with existing Tag's ID", func() {
 			It("should return a Tag from its ID", func() {
-				loader := dataloader_mock.NewMockInterface(ctrl)
+				loader := NewMockInterface(ctrl)
 				id := bson.NewObjectId()
 				repo := Repository{Loader: loader}
 				loader.
@@ -67,7 +83,7 @@ var _ = Describe("Tag", func() {
 
 		Context("find with non-existing Tag's ID", func() {
 			It("should return a nil Tag's pointer", func() {
-				loader := dataloader_mock.NewMockInterface(ctrl)
+				loader := NewMockInterface(ctrl)
 				id := bson.NewObjectId()
 				repo := Repository{Loader: loader}
 				loader.
@@ -87,17 +103,39 @@ var _ = Describe("Tag", func() {
 	Describe("repository.FindAll", func() {
 		Context("find first 10 Tags", func() {
 			It("should return a list of first 10 Tags order by alphabet", func() {
-				// db := mongodb_mock.NewMockDatabase(ctrl)
-				// loader := dataloader_mock.NewMockInterface(ctrl)
-				// repo := Repository{
-				// 	Database: db,
-				// 	Loader:   loader,
-				// }
-				// q := mongodb_mock.NewMockQuery(ctrl)
-				// q.EXPECT().Select(bson.M{"_id": 1}).Return(q)
-				// c := mongodb_mock.NewMockCollection(ctrl)
-				// c.EXPECT().Find(nil).Return(q)
-				// db.EXPECT().C("tags").Return(c)
+				db := NewMockDatabase(ctrl)
+				loader := NewMockInterface(ctrl)
+				mockTags := make([]*Tag, 10)
+				for i := range mockTags {
+					mockTags[i] = &Tag{
+						ID: bson.NewObjectId(),
+					}
+				}
+				q := &mockQuery{NewMockQuery(ctrl), mockTags}
+				q.EXPECT().Select(bson.M{"_id": 1}).Return(q)
+				q.EXPECT().Skip(0).Return(q)
+				q.EXPECT().Limit(10).Return(q)
+
+				repo := Repository{
+					Database: db,
+					Loader:   loader,
+				}
+				c := NewMockCollection(ctrl)
+				c.EXPECT().Find(nil).Return(q)
+				db.EXPECT().C("tags").Return(c)
+				loader.
+					EXPECT().
+					LoadMany(context.TODO(), dld.NewKeysFromStrings(Tags(mockTags).Keys())).
+					Return(dld.ThunkMany(func() ([]interface{}, []error) {
+						return []interface{}{mockTags}, nil
+					}))
+
+				ts, err := repo.FindAll(0, 10, struct {
+					Field     string
+					Direction string
+				}{"slug", ""})
+				Expect(err).To(BeNil())
+				Expect(len(ts)).To(Equal(10))
 			})
 		})
 	})

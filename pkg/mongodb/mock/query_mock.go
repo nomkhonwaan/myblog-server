@@ -6,10 +6,11 @@ package mongodb_mock
 
 import (
 	gomock "github.com/golang/mock/gomock"
+        mongodb "github.com/nomkhonwaan/myblog-server/pkg/mongodb"
 	reflect "reflect"
 )
 
-// MockQuery is a mock of Query interface
+// MockQuery is a mock of mongodb.Query interface
 type MockQuery struct {
 	ctrl     *gomock.Controller
 	recorder *MockQueryMockRecorder
@@ -44,22 +45,22 @@ func (mr *MockQueryMockRecorder) All(result interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "All", reflect.TypeOf((*MockQuery)(nil).All), result)
 }
 
-// Iter mocks base method
-func (m *MockQuery) Iter() Iter {
+// mongodb.Iter mocks base method
+func (m *MockQuery) Iter() mongodb.Iter {
 	ret := m.ctrl.Call(m, "Iter")
-	ret0, _ := ret[0].(Iter)
+	ret0, _ := ret[0].(mongodb.Iter)
 	return ret0
 }
 
-// Iter indicates an expected call of Iter
+// mongodb.Iter indicates an expected call of Iter
 func (mr *MockQueryMockRecorder) Iter() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Iter", reflect.TypeOf((*MockQuery)(nil).Iter))
 }
 
 // Limit mocks base method
-func (m *MockQuery) Limit(n int) Query {
+func (m *MockQuery) Limit(n int) mongodb.Query {
 	ret := m.ctrl.Call(m, "Limit", n)
-	ret0, _ := ret[0].(Query)
+	ret0, _ := ret[0].(mongodb.Query)
 	return ret0
 }
 
@@ -69,9 +70,9 @@ func (mr *MockQueryMockRecorder) Limit(n interface{}) *gomock.Call {
 }
 
 // Select mocks base method
-func (m *MockQuery) Select(selector interface{}) Query {
+func (m *MockQuery) Select(selector interface{}) mongodb.Query {
 	ret := m.ctrl.Call(m, "Select", selector)
-	ret0, _ := ret[0].(Query)
+	ret0, _ := ret[0].(mongodb.Query)
 	return ret0
 }
 
@@ -81,9 +82,9 @@ func (mr *MockQueryMockRecorder) Select(selector interface{}) *gomock.Call {
 }
 
 // Skip mocks base method
-func (m *MockQuery) Skip(n int) Query {
+func (m *MockQuery) Skip(n int) mongodb.Query {
 	ret := m.ctrl.Call(m, "Skip", n)
-	ret0, _ := ret[0].(Query)
+	ret0, _ := ret[0].(mongodb.Query)
 	return ret0
 }
 
