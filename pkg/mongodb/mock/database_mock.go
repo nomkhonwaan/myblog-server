@@ -6,6 +6,7 @@ package mongodb_mock
 
 import (
 	gomock "github.com/golang/mock/gomock"
+        mongodb "github.com/nomkhonwaan/myblog-server/pkg/mongodb"
 	reflect "reflect"
 )
 
@@ -33,9 +34,9 @@ func (m *MockDatabase) EXPECT() *MockDatabaseMockRecorder {
 }
 
 // C mocks base method
-func (m *MockDatabase) C(name string) Collection {
+func (m *MockDatabase) C(name string) mongodb.Collection {
 	ret := m.ctrl.Call(m, "C", name)
-	ret0, _ := ret[0].(Collection)
+	ret0, _ := ret[0].(mongodb.Collection)
 	return ret0
 }
 

@@ -6,8 +6,8 @@ package dataloader_mock
 
 import (
 	context "context"
-        "github.com/nicksrandall/dataloader"
 	gomock "github.com/golang/mock/gomock"
+        dataloader "github.com/nicksrandall/dataloader"
 	reflect "reflect"
 )
 

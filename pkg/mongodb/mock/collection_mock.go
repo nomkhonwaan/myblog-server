@@ -6,6 +6,7 @@ package mongodb_mock
 
 import (
 	gomock "github.com/golang/mock/gomock"
+        mongodb "github.com/nomkhonwaan/myblog-server/pkg/mongodb"
 	reflect "reflect"
 )
 
@@ -33,9 +34,9 @@ func (m *MockCollection) EXPECT() *MockCollectionMockRecorder {
 }
 
 // Find mocks base method
-func (m *MockCollection) Find(query interface{}) Query {
+func (m *MockCollection) Find(query interface{}) mongodb.Query {
 	ret := m.ctrl.Call(m, "Find", query)
-	ret0, _ := ret[0].(Query)
+	ret0, _ := ret[0].(mongodb.Query)
 	return ret0
 }
 
