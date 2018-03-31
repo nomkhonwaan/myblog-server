@@ -29,6 +29,15 @@ func (q *mockQuery) All(result interface{}) error {
 	return nil
 }
 
+type mockErrorQuery struct {
+	*MockQuery
+	err error
+}
+
+func (q *mockErrorQuery) All(result interface{}) error {
+	return q.err
+}
+
 var _ = Describe("Tag", func() {
 	Describe("Tag.Key", func() {
 		It("should return a hexadecimal string of ObjectID correctly", func() {
@@ -101,7 +110,7 @@ var _ = Describe("Tag", func() {
 		})
 
 		Context("find with any ID but an error has occurred", func() {
-			It("should return an error instead of nil", func() {
+			It("should return an error", func() {
 				loader := NewMockInterface(ctrl)
 				id := bson.NewObjectId()
 				repo := Repository{Loader: loader}
@@ -164,7 +173,7 @@ var _ = Describe("Tag", func() {
 			})
 		})
 
-		Context("find next 10 tags", func() {
+		Context("find next 10 Tags", func() {
 			It("should return a list of next 10 Tags", func() {
 				db := NewMockDatabase(ctrl)
 				loader := NewMockInterface(ctrl)
@@ -206,6 +215,43 @@ var _ = Describe("Tag", func() {
 				for i, t := range ts {
 					Expect(t.ID).To(Equal(mockTags[i].ID))
 				}
+			})
+		})
+
+		Context("find more 10 Tags but an error has occurred", func() {
+			It("should return an error", func() {
+				db := NewMockDatabase(ctrl)
+				loader := NewMockInterface(ctrl)
+				mockTags := make([]*Tag, 10)
+				for i := range mockTags {
+					mockTags[i] = &Tag{
+						ID: bson.NewObjectId(),
+					}
+				}
+				repo := Repository{
+					Database: db,
+					Loader:   loader,
+				}
+				q := &mockErrorQuery{NewMockQuery(ctrl), errors.New("something went wrong")}
+				q.EXPECT().Select(bson.M{"_id": 1}).Return(q)
+				q.EXPECT().Skip(10).Return(q)
+				q.EXPECT().Limit(10).Return(q)
+				c := NewMockCollection(ctrl)
+				c.EXPECT().Find(nil).Return(q)
+				db.EXPECT().C("tags").Return(c)
+				loader.
+					EXPECT().
+					LoadMany(context.TODO(), dld.NewKeysFromStrings(Tags(mockTags).Keys())).
+					Return(dld.ThunkMany(func() ([]interface{}, []error) {
+						return nil, nil
+					}))
+
+				ts, err := repo.FindAll(10, 10, struct {
+					Field     string
+					Direction string
+				}{"slug", ""})
+				Expect(err).To(Not(BeNil()))
+				Expect(ts).To(BeNil())
 			})
 		})
 	})
