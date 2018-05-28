@@ -12,7 +12,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// Repositorier is a Post's repository interface
 type Repositorier interface {
 	FindByID(id string) (*Post, error)
 	FindPublishedByID(id string) (*Post, error)
@@ -25,7 +24,6 @@ type Repositorier interface {
 	) ([]*Post, error)
 }
 
-// Post represent an entity of Post
 type Post struct {
 	ID          bson.ObjectId `bson:"_id"`
 	Title       string        `bson:"title"`
@@ -39,15 +37,12 @@ type Post struct {
 	PublishedAt time.Time     `bson:"publishedAt"`
 }
 
-// Key returns a Placeholder key string
 func (p Post) Key() string {
 	return p.ID.Hex()
 }
 
-// Posts represent a list of Posts
 type Posts []*Post
 
-// Keys returns a list of Placeholder key string
 func (ps Posts) Keys() []string {
 	keys := make([]string, len(ps))
 	for i, p := range ps {
@@ -56,18 +51,15 @@ func (ps Posts) Keys() []string {
 	return keys
 }
 
-// NewPlaceholder returns a new Post's object
 func NewPlaceholder() dataloader.Placeholder {
 	return dataloader.Placeholder(&Post{})
 }
 
-// Repository is an implemented of Post's Repositorier interface
 type Repository struct {
 	db     mongodb.Database
 	loader dld.Interface
 }
 
-// NewRepository returns a new Post's repository with dataloader configured
 func NewRepository(db mongodb.Database) Repository {
 	c, _ := cache.New(100)
 
@@ -80,7 +72,6 @@ func NewRepository(db mongodb.Database) Repository {
 	}
 }
 
-// FindByID finds a single Post from its ID
 func (repo Repository) FindByID(id string) (*Post, error) {
 	p, err := repo.loader.Load(context.TODO(), dld.StringKey(id))()
 	if err != nil {
@@ -92,7 +83,6 @@ func (repo Repository) FindByID(id string) (*Post, error) {
 	return nil, nil
 }
 
-// FindPublishedByID finds a single published Post from its ID
 func (repo Repository) FindPublishedByID(id string) (*Post, error) {
 	p, err := repo.FindByID(id)
 	if err != nil {
@@ -105,7 +95,6 @@ func (repo Repository) FindPublishedByID(id string) (*Post, error) {
 	return p, nil
 }
 
-// FindAllPublished finds all published Posts
 func (repo Repository) FindAllPublished(
 	offset, limit int,
 	orderBy struct {

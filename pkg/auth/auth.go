@@ -24,10 +24,8 @@ const (
 	EmailVerified
 )
 
-// Key used to define a context.Context's key instead of basic type
 type Key int
 
-// NewMiddleware returns a new authentication middleware which validates token on request header
 func NewMiddleware(jwksURI string, audience []string, issuer string) func(http.Handler) http.Handler {
 	validator := auth0.NewValidator(
 		auth0.NewConfiguration(

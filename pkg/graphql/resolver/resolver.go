@@ -9,23 +9,18 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// OrderByDirection is a represent type of string for sorting direction
 type OrderByDirection string
 
 const (
-	// ASC is a default sorting option which is empty string in MongoDB
-	ASC = OrderByDirection("")
-	// DESC is a sorting which will start with dashed (-) on any field that need to sort by descending
+	ASC  = OrderByDirection("")
 	DESC = OrderByDirection("-")
 )
 
-// Resolver is a GraphQL's Root Resolver which provides root queries and mutations.
 type Resolver struct {
 	PostRepository post.Repositorier `inject:"pkg/post.Repositorier"`
 	TagRepository  tag.Repositorier  `inject:"pkg/tag.Repositorier"`
 }
 
-// PublishedPost is an implemented function of GraphQL's queries which returns a published Post from its ID
 func (r *Resolver) PublishedPost(_ context.Context, args struct{ ID graphql.ID }) (*PostResolver, error) {
 	p, err := r.PostRepository.FindPublishedByID(string(args.ID))
 	if err != nil {
@@ -34,7 +29,6 @@ func (r *Resolver) PublishedPost(_ context.Context, args struct{ ID graphql.ID }
 	return NewPostResolver(p, r.TagRepository), nil
 }
 
-// Tag is an implemented function of GraphQL's queries which returns a Tag from its ID
 func (r *Resolver) Tag(_ context.Context, args struct{ ID graphql.ID }) (*TagResolver, error) {
 	t, err := r.TagRepository.FindByID(string(args.ID))
 	if err != nil {
@@ -43,7 +37,6 @@ func (r *Resolver) Tag(_ context.Context, args struct{ ID graphql.ID }) (*TagRes
 	return NewTagResolver(t), nil
 }
 
-// Tags is an implemented function of GraphQL's queries which returns a list of Tags
 func (r *Resolver) Tags(
 	_ context.Context,
 	args struct {
@@ -74,7 +67,6 @@ func (r *Resolver) Tags(
 	return NewTagsResolver(ts), nil
 }
 
-// withDefaultInt returns a default number of int if the given number is equal zero or nil
 func withDefaultInt(num *int, dnum int) int {
 	if num == nil {
 		return dnum
@@ -85,7 +77,6 @@ func withDefaultInt(num *int, dnum int) int {
 	return *num
 }
 
-// withDefaultInt32 returns a default number of int32 if the given number is equal zero or nil
 func withDefaultInt32(num *int32, dnum int32) int32 {
 	if num == nil {
 		return dnum
@@ -96,7 +87,6 @@ func withDefaultInt32(num *int32, dnum int32) int32 {
 	return *num
 }
 
-// withDefaultString returns a default string if the given string is empty or nil
 func withDefaultString(str *string, dstr string) string {
 	logrus.Info(str)
 	if str == nil {

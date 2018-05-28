@@ -43,7 +43,6 @@ func init() {
 	}
 }
 
-// New returns a new application
 func New() *cli.App {
 	app := cli.NewApp()
 	app.Usage = usage

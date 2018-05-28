@@ -8,12 +8,10 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// Placeholder is an interface of any models that can resolve a key as a string
 type Placeholder interface {
 	Key() string
 }
 
-// NewBatchFunc returns a new dataloader.BatchFunc
 func NewBatchFunc(c mongodb.Collection, newPlaceholderFn func() Placeholder) dataloader.BatchFunc {
 	return func(_ context.Context, keys dataloader.Keys) []*dataloader.Result {
 		results := make([]*dataloader.Result, len(keys))

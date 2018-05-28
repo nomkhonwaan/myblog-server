@@ -11,9 +11,6 @@ import (
 	"github.com/nomkhonwaan/myblog-server/pkg/graphql/resolver"
 )
 
-// Handler is an HTTP handler for GraphQL which serves the following these
-// - [GET] /graphql - Returns a Graphiql HTML page
-// - [POST] /graphql - Serves a GraphQL endpoint
 type Handler struct {
 	*resolver.Resolver `inject:"pkg/graphql/resolver.Resolver"`
 }
@@ -58,12 +55,10 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Graphiql returns a Graphiql HTML page as a byte array
 func Graphiql() []byte {
 	return generated.MustAsset("pkg/graphql/graphiql/index.html")
 }
 
-// Schema returns a GraphQL's schema as a byte array
 func Schema() []byte {
 	buf := bytes.Buffer{}
 	for _, s := range generated.AssetNames() {
