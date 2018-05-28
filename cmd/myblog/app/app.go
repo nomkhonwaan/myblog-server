@@ -8,14 +8,14 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/nomkhonwaan/myblog-server/pkg/mongodb"
-	"github.com/nomkhonwaan/myblog-server/pkg/tag"
-
 	"github.com/facebookgo/inject"
 	"github.com/nomkhonwaan/myblog-server/pkg/auth"
 	"github.com/nomkhonwaan/myblog-server/pkg/graphql"
 	"github.com/nomkhonwaan/myblog-server/pkg/graphql/resolver"
+	"github.com/nomkhonwaan/myblog-server/pkg/mongodb"
 	"github.com/nomkhonwaan/myblog-server/pkg/post"
+	"github.com/nomkhonwaan/myblog-server/pkg/server"
+	"github.com/nomkhonwaan/myblog-server/pkg/tag"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 	"gopkg.in/mgo.v2"
@@ -124,7 +124,7 @@ func action(ctx *cli.Context) error {
 		return err
 	}
 
-	server := InsecureServer{
+	server := server.InsecureServer{
 		ServeMux:        http.NewServeMux(),
 		ShutdownTimeout: time.Second * 15,
 	}

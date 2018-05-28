@@ -87,7 +87,7 @@ func pkgGraphqlSchemaQueryGraphql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "pkg/graphql/schema/query.graphql", size: 329, mode: os.FileMode(420), modTime: time.Unix(1521788425, 0)}
+	info := bindataFileInfo{name: "pkg/graphql/schema/query.graphql", size: 329, mode: os.FileMode(420), modTime: time.Unix(1521812750, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -107,7 +107,7 @@ func pkgGraphqlSchemaSchemaGraphql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "pkg/graphql/schema/schema.graphql", size: 26, mode: os.FileMode(420), modTime: time.Unix(1521785093, 0)}
+	info := bindataFileInfo{name: "pkg/graphql/schema/schema.graphql", size: 26, mode: os.FileMode(420), modTime: time.Unix(1521643244, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -127,7 +127,7 @@ func pkgGraphqlSchemaTypesPostGraphql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "pkg/graphql/schema/types/post.graphql", size: 595, mode: os.FileMode(420), modTime: time.Unix(1521600069, 0)}
+	info := bindataFileInfo{name: "pkg/graphql/schema/types/post.graphql", size: 595, mode: os.FileMode(420), modTime: time.Unix(1521643251, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -147,7 +147,7 @@ func pkgGraphqlSchemaTypesTagGraphql() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "pkg/graphql/schema/types/tag.graphql", size: 276, mode: os.FileMode(420), modTime: time.Unix(1521788419, 0)}
+	info := bindataFileInfo{name: "pkg/graphql/schema/types/tag.graphql", size: 276, mode: os.FileMode(420), modTime: time.Unix(1521812750, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -167,7 +167,7 @@ func pkgGraphqlGraphiqlIndexHtml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "pkg/graphql/graphiql/index.html", size: 1351, mode: os.FileMode(420), modTime: time.Unix(1521519513, 0)}
+	info := bindataFileInfo{name: "pkg/graphql/graphiql/index.html", size: 1351, mode: os.FileMode(420), modTime: time.Unix(1521643244, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

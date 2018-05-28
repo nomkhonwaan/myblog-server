@@ -1,4 +1,4 @@
-package app
+package server
 
 import (
 	"context"
@@ -9,13 +9,11 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// InsecureServer provides an HTTP server without SSL, TLS configure
 type InsecureServer struct {
 	*http.ServeMux
 	ShutdownTimeout time.Duration
 }
 
-// ListenAndServe listens and serves an HTTP server in the background on given address
 func (s *InsecureServer) ListenAndServe(addr string, stopCh <-chan struct{}) error {
 	server := http.Server{
 		Handler: s.ServeMux,
@@ -47,12 +45,12 @@ func (s *InsecureServer) ListenAndServe(addr string, stopCh <-chan struct{}) err
 
 		select {
 		case <-stopCh:
-			logrus.Infof("a server has been stopped")
+			logrus.Infof("server has been stopped")
 		default:
-			logrus.Fatal(err)
+			logrus.Fatalf("insecure_server: %v", err)
 		}
 	}()
 
-	logrus.Infof("a server is listening on address: %s", l.Addr().String())
+	logrus.Infof("server is listening on address: %s", l.Addr().String())
 	return nil
 }
